@@ -33,6 +33,9 @@
         <activity android:name=".activities.OnboardingActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
+        <activity
+            android:name=".activities.IntroActivity"
+            android:exported="false" />
 
     </application>
 
