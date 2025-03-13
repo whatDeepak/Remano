@@ -1,6 +1,7 @@
 package com.example.remano.activities
 
 import android.app.Dialog
+import android.graphics.Typeface
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -31,15 +32,14 @@ open class BaseActivity : AppCompatActivity() {
      */
     fun showProgressDialog(text: String) {
         mProgressDialog = Dialog(this)
-
-        /*Set the screen content from a layout resource.
-        The resource will be inflated, adding all top-level views to the screen.*/
         mProgressDialog.setContentView(R.layout.dialog_progress)
 
-        val tvProgressText=mProgressDialog.findViewById<TextView>(R.id.tv_progress_text)
-        tvProgressText.text = text
+        val tvProgressText = mProgressDialog.findViewById<TextView>(R.id.tv_progress_text)
+        val poppinsRegular = Typeface.createFromAsset(assets, "poppins_regular.ttf")
 
-        //Start the dialog and display it on screen.
+        tvProgressText.text = text
+        tvProgressText.typeface = poppinsRegular
+
         mProgressDialog.show()
     }
 
@@ -50,8 +50,8 @@ open class BaseActivity : AppCompatActivity() {
         mProgressDialog.dismiss()
     }
 
-    fun getCurrentUserID(): String {
-        return FirebaseAuth.getInstance().currentUser!!.uid
+    fun getCurrentUserID(): String? {
+        return FirebaseAuth.getInstance().currentUser?.uid
     }
 
     fun doubleBackToExit() {

@@ -14,6 +14,8 @@ import androidx.credentials.exceptions.GetCredentialException
 import com.example.remano.activities.BaseActivity
 import com.example.remano.activities.IntroActivity
 import com.example.remano.activities.MainActivity
+import com.example.remano.activities.SignInActivity
+import com.example.remano.activities.SignUpActivity
 import com.example.remano.model.User
 import com.example.remano.utils.Constants
 import com.google.firebase.auth.*
@@ -91,6 +93,67 @@ class FirestoreClass: BaseActivity() {
             }
     }
 
+    fun signInUser(activity: SignInActivity, email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val currentUserID = auth.currentUser?.uid
+                    if (currentUserID != null) {
+                        getUserDetails(activity, currentUserID)
+                    }
+                } else {
+                    Log.w("Sign in", "signInWithEmail:failure", task.exception)
+                    activity.hideProgressDialog()
+                    activity.showErrorSnackBar("Authentication failed.")
+                }
+            }
+    }
+
+    fun signUpUser(activity: SignUpActivity, name: String, email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val firebaseUser: FirebaseUser = task.result!!.user!!
+                    val user = User(firebaseUser.uid, name, email)
+                    registerUser(activity, user)
+                } else {
+                    activity.hideProgressDialog()
+                    activity.showErrorSnackBar("Registration failed: ${task.exception?.message}")
+                }
+            }
+    }
+
+    fun sendPasswordResetEmail(activity: SignInActivity, email: String) {
+        auth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                Toast.makeText(activity, "Please check your email to reset your password!", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(activity, exception.message, Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+    private fun getUserDetails(activity: SignInActivity, userId: String) {
+        db.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                val user = document.toObject(User::class.java)
+                if (user != null) {
+                    activity.signInSuccess(user)
+                } else {
+                    activity.hideProgressDialog()
+                    activity.showErrorSnackBar("User data not found.")
+                }
+            }
+            .addOnFailureListener {
+                activity.hideProgressDialog()
+                activity.showErrorSnackBar("Failed to retrieve user details.")
+            }
+    }
+
+
     fun checkIfUserExistsInDatabase(activity: Activity, email: String?, name: String?, username: String?) {
         // Check if the user already exists based on email
         db.collection(Constants.USERS)
@@ -99,8 +162,11 @@ class FirestoreClass: BaseActivity() {
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     // User doesn't exist, proceed with registration
-                    val userInfo = User(getCurrentUserID(), name ?: "", email ?: "", username?:"")
-                    registerUser(activity, userInfo)
+                    val userInfo =
+                        getCurrentUserID()?.let { User(it, name ?: "", email ?: "", username?:"") }
+                    if (userInfo != null) {
+                        registerUser(activity, userInfo)
+                    }
                 } else {
                     // User with the same email already exists, start MainActivity
                     activity.startActivity(Intent(activity, MainActivity::class.java))
@@ -127,21 +193,22 @@ class FirestoreClass: BaseActivity() {
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     // No user with the same email found, proceed with creating a new document
-                    db.collection(Constants.USERS)
-                        .document(currentUserID)
-                        .set(userInfo, SetOptions.merge())
-                        .addOnSuccessListener {
-                            (activity as IntroActivity).userRegisteredSuccessIntro()
-//                            if (activity is IntroActivity) {
-//                                (activity as IntroActivity).userRegisteredSuccessIntro()
-//                            }
-//                            if (activity is SignUpActivity) {
-//                                (activity as SignUpActivity).userRegisteredSuccessSignUp()
-//                            }
-                        }
-                        .addOnFailureListener { e ->
-                            handleRegistrationFailure(activity, e)
-                        }
+                    if (currentUserID != null) {
+                        db.collection(Constants.USERS)
+                            .document(currentUserID)
+                            .set(userInfo, SetOptions.merge())
+                            .addOnSuccessListener {
+                                if (activity is IntroActivity) {
+                                    (activity as IntroActivity).userRegisteredSuccessIntro()
+                                }
+                                if (activity is SignUpActivity) {
+                                    (activity as SignUpActivity).userRegisteredSuccessSignUp()
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                handleRegistrationFailure(activity, e)
+                            }
+                    }
                 } else {
                     // User with the same email already exists, update the existing document
                     val existingUserId = documents.documents[0].id
@@ -149,13 +216,12 @@ class FirestoreClass: BaseActivity() {
                         .document(existingUserId)
                         .set(userInfo, SetOptions.merge())
                         .addOnSuccessListener {
-                            (activity as IntroActivity).userRegisteredSuccessIntro()
-//                            if (activity is IntroActivity) {
-//                                (activity as IntroActivity).userRegisteredSuccessIntro()
-//                            }
-//                            if (activity is SignUpActivity) {
-//                                (activity as SignUpActivity).userRegisteredSuccessSignUp()
-//                            }
+                            if (activity is IntroActivity) {
+                                (activity as IntroActivity).userRegisteredSuccessIntro()
+                            }
+                            if (activity is SignUpActivity) {
+                                (activity as SignUpActivity).userRegisteredSuccessSignUp()
+                            }
                         }
                         .addOnFailureListener { e ->
                             handleRegistrationFailure(activity, e)
@@ -168,13 +234,12 @@ class FirestoreClass: BaseActivity() {
     }
 
     private fun handleRegistrationFailure(activity: Activity, e: Exception) {
-        (activity as IntroActivity).hideProgressDialog()
-//        if (activity is IntroActivity) {
-//            (activity as IntroActivity).hideProgressDialog()
-//        }
-//        if (activity is SignUpActivity) {
-//            (activity as SignUpActivity).hideProgressDialog()
-//        }
+        if (activity is IntroActivity) {
+            (activity as IntroActivity).hideProgressDialog()
+        }
+        if (activity is SignUpActivity) {
+            (activity as SignUpActivity).hideProgressDialog()
+        }
 
         Log.e(
             activity.javaClass.simpleName,

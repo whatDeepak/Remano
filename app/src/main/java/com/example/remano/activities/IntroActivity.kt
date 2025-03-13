@@ -20,6 +20,10 @@ class IntroActivity: BaseActivity() {
         val btnLoginIntro: Button = findViewById(R.id.btn_login_intro)
         val btnGoogleIntro: Button = findViewById(R.id.btn_google_intro)
 
+        btnLoginIntro.setOnClickListener {
+            startActivity(Intent(this@IntroActivity, SignInActivity::class.java))
+        }
+
         btnGoogleIntro.setOnClickListener {
             FirestoreClass().signInWithGoogle(this)
         }

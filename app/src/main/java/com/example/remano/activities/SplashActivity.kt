@@ -14,6 +14,7 @@ import android.widget.VideoView
 import com.example.remano.R
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.net.toUri
+import com.example.remano.firebase.FirestoreClass
 
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
@@ -34,28 +35,15 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun navigateToOnboardingActivity() {
-        val intent = Intent(this, OnboardingActivity::class.java)
-        startActivity(intent)
-        finish() // Prevent user from navigating back to splash
+        val userId = FirestoreClass().getCurrentUserID()
+        if (userId == null) {
+            // User is signed out, go to the intro screen
+            startActivity(Intent(this, IntroActivity::class.java))
+            finish()
+        } else {
+            // User is signed in, proceed normally
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
     }
-
-//        Handler().postDelayed({
-//            // Here if the user is signed in once and not signed out again from the app. So next time while coming into the app
-//            // we will redirect him to MainScreen or else to the Intro Screen as it was before.
-//
-//            // Get the current user id
-//            val currentUserID = FirestoreClass().getCurrentUserID()
-//            // Start the Intro Activity
-//
-//            if (currentUserID.isNotEmpty()) {
-//                // Start the Main Activity
-//                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-//            } else {
-//                // Start the Intro Activity
-//                startActivity(Intent(this@SplashActivity, IntroActivity::class.java))
-//            }
-//            finish() // Call this when your activity is done and should be closed.
-//        }, 2500) // Here we pass the delay time in milliSeconds after which the splash activity will disappear.
-
-
 }
