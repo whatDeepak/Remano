@@ -1,0 +1,13 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent"/>
+        </shape>
+    </item>
+    <item>
+        <bitmap
+            android:src="@drawable/home_background"
+            android:gravity="center"
+            android:alpha="0.3"/> <!-- Adjust alpha for blur effect -->
+    </item>
+</layer-list>

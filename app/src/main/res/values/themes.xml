@@ -6,4 +6,9 @@
     </style>
 
     <style name="Theme.Remano" parent="Base.Theme.Remano" />
+
+    <style name="BoldTextAppearance" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">30sp</item> <!-- Change the text size here -->
+    </style>
 </resources>
