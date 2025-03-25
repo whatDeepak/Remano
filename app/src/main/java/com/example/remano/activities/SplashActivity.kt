@@ -38,7 +38,7 @@ class SplashActivity : AppCompatActivity() {
         val userId = FirestoreClass().getCurrentUserID()
         if (userId == null) {
             // User is signed out, go to the intro screen
-            startActivity(Intent(this, IntroActivity::class.java))
+            startActivity(Intent(this, OnboardingActivity::class.java))
             finish()
         } else {
             // User is signed in, proceed normally
