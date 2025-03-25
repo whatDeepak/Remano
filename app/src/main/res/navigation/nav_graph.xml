@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.remano.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.example.remano.fragments.ExploreFragment"
+        android:label="fragment_explore"
+        tools:layout="@layout/fragment_explore" />
+    <fragment
+        android:id="@+id/sosFragment"
+        android:name="com.example.remano.fragments.SOSFragment"
+        android:label="fragment_sos"
+        tools:layout="@layout/fragment_sos" />
+    <fragment
+        android:id="@+id/youFragment"
+        android:name="com.example.remano.fragments.YouFragment"
+        android:label="fragment_you"
+        tools:layout="@layout/fragment_you" />
+</navigation>

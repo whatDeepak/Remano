@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/nav_home"
+        android:title="Home"
+        app:destination="@id/homeFragment"
+        />
+
+    <item
+        android:id="@+id/exploreFragment"
+        android:icon="@drawable/nav_explore"
+        android:title="Explore"
+        app:destination="@id/exploreFragment"
+        />
+
+    <item
+        android:id="@+id/sosFragment"
+        android:icon="@drawable/nav_sos"
+        android:title="SOS"
+        app:destination="@id/sosFragment"
+        />
+
+    <item
+        android:id="@+id/youFragment"
+        android:icon="@drawable/nav_you"
+        android:title="For You"
+        app:destination="@id/youFragment"
+        />
+
+</menu>
