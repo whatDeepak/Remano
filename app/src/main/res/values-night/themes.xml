@@ -1,7 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Remano" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
+
+    <style name="BoldTextAppearance" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">30sp</item> <!-- Change the text size here -->
     </style>
 </resources>

@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.firebase.storage.ktx)
+    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,6 +81,9 @@ dependencies {
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
 
 // Allow references to generated code
